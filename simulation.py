@@ -93,7 +93,7 @@ class simulation:
         )
         return r_barre, pf
 
-    def simulation(self):
+    def simulation(self, pi=0):
         # Calcul du score
         self.calcul_score()
         alpha_star = np.argmax(self.score, axis=1) # Les meilleurs stratégies
@@ -102,7 +102,6 @@ class simulation:
         choix = []
         # Calcul du choix des agents
         for i in range(self.N):
-            pi = 0 # que doit valoire cette valeure ?
             random = np.random.random()
             if random < pi: # L'agent fait un truc random
                 choix.append(np.random.randint(3)-1)
