@@ -21,8 +21,8 @@ class simulation:
     beta = 1-1e-2 # La mémoire du score
 
     def __init__(self, P, g_sur_l=0.1, alpha=1-1e-4, rho=0.02, phi=3_003, pi=0):
-        self.l = self.g / 0.1 # Lambda
-        self.P = 0 #Polarisation 
+        self.l = self.g / g_sur_l # Lambda
+        self.P = P #Polarisation 
         self.alpha = alpha # 0.04
         self.phi = phi # Le nombre total d'action en circulation (Quelle valeure faut-il mettre ?)
         self.rho = rho # 0.000054255 # 2% d'intéret (Quelle valeure faut il mettre ? Regarder la croissance de la courbe Figure 1 ?)
@@ -167,3 +167,23 @@ class simulation:
             self.B[i] = self.B[i]*(1+self.rho) - delta_theta[i]*self.X[-1]
 
 
+if __name__ == "__main__":
+    liste_simulation = [
+        ({"P":0, "phi":50, "alpha":1e-2, "rho":1e-3, "pi":1}, "Fully random"),
+        ({"P":0, "g_sur_l":0.1, "phi":50, "alpha":1e-2, "rho":1e-3, "pi":0}, "Périodique"),
+        ({"P":0, "g_sur_l":0.6, "phi":50, "alpha":1e-2, "rho":1e-3, "pi":0}, "Intermittent"),
+        ({"P":-0.2, "g_sur_l":0.6, "phi":50, "alpha":1e-2, "rho":1e-3, "pi":0}, "Stable"),
+    ]
+    for kwargs, title in liste_simulation:
+        sim = simulation(**kwargs)
+        plt.figure(figsize=(18, 9))
+        for _ in range(6000):
+            sim.simulation()
+        plt.plot(range(3_000, 3_000 + len(sim.X[3000:])), sim.X[3000:])
+        if title == "Fully random":
+            plt.yscale("log")
+            plt.title(f"{title} pi = {kwargs['pi']}")
+        else:
+            plt.title(f"{title} : " + r"\frac{g}{\lambda}" + f" = {kwargs['g_sur_l']} et P = {kwargs['P']}")
+        plt.grid()
+        plt.savefig(f"simulation-{title}.png")
