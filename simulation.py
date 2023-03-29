@@ -19,13 +19,14 @@ class simulation:
     f = 0.05 # Le niveau de confiance
     N = 1_001 # Le nombre d'agent
     beta = 1-1e-2 # La mémoire du score
-    phi = N*3 # Le nombre total d'action en circulation (Quelle valeure faut-il mettre ?)
 
-    def __init__(self, P=0, g_sur_l=0.1, alpha=1-1e-4, rho=0.02):
-        self.l = self.g / g_sur_l # Lambda
-        self.P = P #Polarisation 
+    def __init__(self, P, g_sur_l=0.1, alpha=1-1e-4, rho=0.02, phi=3_003, pi=0):
+        self.l = self.g / 0.1 # Lambda
+        self.P = 0 #Polarisation 
         self.alpha = alpha # 0.04
+        self.phi = phi # Le nombre total d'action en circulation (Quelle valeure faut-il mettre ?)
         self.rho = rho # 0.000054255 # 2% d'intéret (Quelle valeure faut il mettre ? Regarder la croissance de la courbe Figure 1 ?)
+        self.pi = pi
 
         self.epsilon = [
             [self.creation_strategie(self.m) for _ in range(self.S-1)] + [lambda x: 0]
@@ -93,7 +94,7 @@ class simulation:
         )
         return r_barre, pf
 
-    def simulation(self, pi=0):
+    def simulation(self):
         # Calcul du score
         self.calcul_score()
         alpha_star = np.argmax(self.score, axis=1) # Les meilleurs stratégies
@@ -103,9 +104,9 @@ class simulation:
         # Calcul du choix des agents
         for i in range(self.N):
             random = np.random.random()
-            if random < pi: # L'agent fait un truc random
+            if random < self.pi: # L'agent fait un truc random
                 choix.append(np.random.randint(3)-1)
-            elif random < (1-pi)*pf: # Probas fondamentaliste
+            elif random < (1-self.pi)*pf: # Probas fondamentaliste
                 if r_barre > self.rho:
                     choix.append(-1)
                 else:
