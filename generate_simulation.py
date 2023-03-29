@@ -10,7 +10,7 @@ def write(text, arg="w"):
 write("P, g_sur_l")
 
 i = 0
-n = 8 # soit environ 2h
+n = 5 # soit environ 50min
 # générer tous ces tests va prendre n*n*2min
 for P in np.linspace(-0.1, 0.1, n):
     for g_sur_l in np.linspace(0.1, 0.8, n):
