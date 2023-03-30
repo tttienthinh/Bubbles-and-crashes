@@ -24,8 +24,8 @@ class simulation:
         self.l = self.g / g_sur_l # Lambda
         self.P = P #Polarisation 
         self.alpha = alpha # 0.04
-        self.phi = phi # Le nombre total d'action en circulation (Quelle valeure faut-il mettre ?)
-        self.rho = rho # 0.000054255 # 2% d'intéret (Quelle valeure faut il mettre ? Regarder la croissance de la courbe Figure 1 ?)
+        self.phi = phi # Le nombre total d'action en circulation (Quelle valeur faut-il mettre ?)
+        self.rho = rho # 0.000054255 # 2% d'intérêt (Quelle valeur faut il mettre ? Regarder la croissance de la courbe Figure 1 ?)
         self.pi = pi
 
         self.epsilon = [
@@ -89,7 +89,7 @@ class simulation:
             r_barre += (self.alpha**(t-t_-1))*np.log(self.X[t_+1]/self.X[t_])
         r_barre = r_barre / (1-self.alpha)
         pf = min(
-            1,
+            1,  
             self.f * abs(r_barre-self.rho) / self.rho
         )
         return r_barre, pf
@@ -180,10 +180,10 @@ if __name__ == "__main__":
         for _ in range(6000):
             sim.simulation()
         plt.plot(range(3_000, 3_000 + len(sim.X[3000:])), sim.X[3000:])
+        plt.yscale("log")
         if title == "Fully random":
-            plt.yscale("log")
             plt.title(f"{title} pi = {kwargs['pi']}")
         else:
             plt.title(f"{title} : " + r"\frac{g}{\lambda}" + f" = {kwargs['g_sur_l']} et P = {kwargs['P']}")
         plt.grid()
-        plt.savefig(f"simulation-{title}.png")
+        plt.savefig(f"simulation-log-{title}.png")
